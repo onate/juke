@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>JukeBox Music Player</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        {% if now_playing %}
+        <div>
+        <p>Now Playing: {{ now_playing.artist }} - {{ now_playing.album }}</p>
+        <form method="post">
+            <input type="submit" name="action" value="Pause" />
+            <input type="submit" name="action" value="Stop" />
+            <input type="submit" name="action" value="Skip" />
+        </form>
+        </div>
+        {% endif %}
+        
+        <ul>
+        {% for artist in artists %}
+        <li>
+            <a href="/artist/{{ artist }}">{{ artist }}</a>
+        </li>
+        {% endfor %}
+        </ul>
+        
+        <p>
+        <a href="/shutdown">Shutdown</a>
+        </p>
+    
+    </body>
+</html>

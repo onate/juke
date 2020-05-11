@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>{{ artist }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        {% if now_playing %}
+        <div>
+        <p>Now Playing: {{ now_playing.artist }} - {{ now_playing.album }}</p>
+        <form method="post">
+            <input type="submit" name="action" value="Pause" />
+            <input type="submit" name="action" value="Stop" />
+            <input type="submit" name="action" value="Skip" />
+        </form>
+        </div>
+        {% endif %}
+        
+        <p><a href="/index">Home</a></p>
+        
+        <ul>
+        {% for album in albums %}
+        <li>
+            <a href="/album/{{ artist }}/{{ album }}">{{ album }}</a>
+        </li>
+        {% endfor %}
+        </ul>
+    
+    </body>
+</html>

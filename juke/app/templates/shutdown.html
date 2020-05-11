@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Shutdown</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" >
+    </head>
+    <body>
+        {% if shutting_down %}
+        <p><b>Shutting down...</b></p>
+        {% endif %}
+
+        <p><a href="/index">Home</a></p>
+                
+        <form method="post">
+            <input type="submit" name="action" value="Shutdown" />
+        </form>
+    
+    </body>
+</html>
