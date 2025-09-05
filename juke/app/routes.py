@@ -1,12 +1,11 @@
 from flask import render_template, request
 from app import app
 import os, os.path
-import vlc
+from mplayer import Player
 
-music_folder = "/home/pi/music"
+music_folder = "/home/nathan/music"
 now_playing = {}
-instance = vlc.Instance('--aout=alsa')
-player = instance.media_list_player_new()
+player = Player()
 
 # No caching at all for API endpoints.
 @app.after_request
@@ -36,8 +35,7 @@ def show_album(artist, album):
     if request.method == 'POST':
         handle_form(request.form)
     tracks = list_tracks(artist, album)
-    return render_template('album.html', album=album, tracks=tracks, artist=artist, 
-                           now_playing=now_playing)
+    return render_template('album.html', album=album, tracks=tracks, artist=artist, now_playing=now_playing)
 
 @app.route('/shutdown', methods=['POST', 'GET'])
 def show_shutdown():
@@ -51,7 +49,7 @@ def show_shutdown():
 def list_folders(folder):
     items = os.listdir(folder)
     r = [item for item in items if os.path.isdir(os.path.join(folder, item))]
-    return sorted(r)
+    return sorted(r, key=str.casefold)
     
 def list_tracks(artist, album):
     items = os.listdir(os.path.join(music_folder, artist, album))
@@ -77,28 +75,20 @@ def play_player(info):
     stop_player()
     tracks = list_tracks(info["artist"], info["album"])
     start = tracks.index(info["track"])
-    playlist = instance.media_list_new()
+    append = 0
     for track in tracks[start:]:
-        playlist.add_media(os.path.join(music_folder, 
-                                        info["artist"], 
-                                        info["album"], 
-                                        track + ".mp3"))
-    player.set_media_list(playlist)
-    player.play()
+        player.loadfile(os.path.join(music_folder, info["artist"], info["album"], track + ".mp3"), append)
+        append = 1
         
 def skip_player():
-    if player.is_playing():
-        player.next()
+    pass
         
 def stop_player():
-    state = player.get_state()
-    if state == vlc.State.Playing or state == vlc.State.Paused:
-        player.stop()
+    player.stop()
         
 def pause_player():
-    state = player.get_state()
-    if state == vlc.State.Playing or state == vlc.State.Paused:
-        player.pause()
+    player.pause()
 
 def do_shutdown():
     os.system("/usr/bin/sudo /sbin/shutdown")
+    
