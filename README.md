@@ -10,7 +10,7 @@ mp3 playback flask app for raspberry pi
 ## Dependencies
 On the Pi:
 - Flask
-- Python-VLC
+- MPlayer
 
 Optional:
 - HifiBerry DAC
